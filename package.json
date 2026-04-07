@@ -1,0 +1,41 @@
+{
+  "name": "aipr",
+  "version": "1.0.0",
+  "description": "AI-powered Pull Request reviews using Claude",
+  "type": "module",
+  "author": "Hardik <dhardik1430@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hardik-143/aipr.git"
+  },
+  "homepage": "https://github.com/hardik-143/aipr#readme",
+  "bugs": {
+    "url": "https://github.com/hardik-143/aipr/issues"
+  },
+  "files": [
+    "src"
+  ],
+  "bin": {
+    "aipr": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "ora": "^8.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "pr-review",
+    "code-review",
+    "claude",
+    "anthropic",
+    "ai",
+    "git",
+    "cli"
+  ],
+  "license": "MIT"
+}
