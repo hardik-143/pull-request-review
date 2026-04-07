@@ -34,7 +34,7 @@ if (flags.version) {
   const { createRequire } = await import('module');
   const require = createRequire(import.meta.url);
   const pkg = require('../package.json');
-  console.log(`aipr v${pkg.version}`);
+  console.log(`pr-review v${pkg.version}`);
   process.exit(0);
 }
 
@@ -54,15 +54,15 @@ await main();
 
 async function main() {
   console.log(chalk.bold.cyan('\n┌─────────────────────────────────────┐'));
-  console.log(chalk.bold.cyan('│  🔍  aipr — AI Code Review           │'));
+  console.log(chalk.bold.cyan('   🔍  pr-review — AI Code Review         '));
   console.log(chalk.bold.cyan('└─────────────────────────────────────┘\n'));
 
   if (!isGitRepo()) {
-    fatal('Not inside a git repository. Run aipr from your project root.');
+    fatal('Not inside a git repository. Run pr-review from your project root.');
   }
 
   const config = loadConfig();
-  console.log(chalk.dim('  Config: ~/.aipr/config.json\n'));
+  console.log(chalk.dim('  Config: ~/.pr-review/config.json\n'));
 
   // ── Select AI provider ─────────────────────────────────────────────────────
 
@@ -307,20 +307,20 @@ function fatal(message) {
 
 function printHelp() {
   console.log(`
-${chalk.bold.cyan('aipr')} — AI-powered Pull Request reviews
+${chalk.bold.cyan('pr-review')} — AI-powered Pull Request reviews
 
 ${chalk.bold('USAGE')}
-  ${chalk.cyan('aipr')}                                 Interactive PR review
-  ${chalk.cyan('aipr review')}                          Explicit review subcommand (same as above)
-  ${chalk.cyan('aipr config')}                          View and edit global config
-  ${chalk.cyan('aipr review --staged')}                 Review staged (uncommitted) changes
-  ${chalk.cyan('aipr review --provider=<provider>')}    Skip provider prompt
-  ${chalk.cyan('aipr review --model=<model>')}          Skip model prompt
-  ${chalk.cyan('aipr review --base=<branch>')}          Override destination/base branch
-  ${chalk.cyan('aipr review --focus=<area>')}           Focus: security, performance, etc.
-  ${chalk.cyan('aipr review --output=<file>')}          Override output file name
-  ${chalk.cyan('aipr --help')}                          Show this help
-  ${chalk.cyan('aipr --version')}                       Show version
+  ${chalk.cyan('pr-review')}                                 Interactive PR review
+  ${chalk.cyan('pr-review review')}                          Explicit review subcommand (same as above)
+  ${chalk.cyan('pr-review config')}                          View and edit global config
+  ${chalk.cyan('pr-review review --staged')}                 Review staged (uncommitted) changes
+  ${chalk.cyan('pr-review review --provider=<provider>')}    Skip provider prompt
+  ${chalk.cyan('pr-review review --model=<model>')}          Skip model prompt
+  ${chalk.cyan('pr-review review --base=<branch>')}          Override destination/base branch
+  ${chalk.cyan('pr-review review --focus=<area>')}           Focus: security, performance, etc.
+  ${chalk.cyan('pr-review review --output=<file>')}          Override output file name
+  ${chalk.cyan('pr-review --help')}                          Show this help
+  ${chalk.cyan('pr-review --version')}                       Show version
 
 ${chalk.bold('PROVIDERS')}
   ${chalk.cyan('claude')}    claude CLI  — claude-sonnet-4-6, claude-opus-4-6, claude-haiku-4-5
@@ -334,23 +334,23 @@ ${chalk.bold('PR NUMBER')}
   the output file is automatically named ${chalk.yellow('pr-<number>-review.md')}.
 
 ${chalk.bold('CONFIG')}
-  ${chalk.dim('~/.aipr/config.json')}   Auto-created on first run
+  ${chalk.dim('~/.pr-review/config.json')}   Auto-created on first run
   Last-used provider and model per provider are remembered.
 
 ${chalk.bold('EXAMPLES')}
   ${chalk.dim('# Standard interactive review')}
-  aipr
+  pr-review
 
   ${chalk.dim('# Explicit review subcommand')}
-  aipr review
+  pr-review review
 
   ${chalk.dim('# Skip all prompts')}
-  aipr review --provider=copilot --model=gpt-5.4 --base=develop
+  pr-review review --provider=copilot --model=gpt-5.4 --base=develop
 
   ${chalk.dim('# Security-focused review of staged changes')}
-  aipr review --staged --focus=security
+  pr-review review --staged --focus=security
 
   ${chalk.dim('# Most capable model with custom output file')}
-  aipr review --provider=claude --model=claude-opus-4-6 --output=deep-review.md
+  pr-review review --provider=claude --model=claude-opus-4-6 --output=deep-review.md
 `);
 }

@@ -1,8 +1,8 @@
-# aipr
+# pr-review
 
 > AI-powered Pull Request reviews — pick your AI, get a structured Markdown report, right from your terminal.
 
-`aipr` diffs two branches, sends the diff to your chosen AI, and saves a structured Markdown review to a file. If a GitHub PR is open, the file is automatically named `pr-<number>-review.md`.
+`pr-review` diffs two branches, sends the diff to your chosen AI, and saves a structured Markdown review to a file. If a GitHub PR is open, the file is automatically named `pr-<number>-review.md`.
 
 **No API keys required.** All providers use their official CLI tools with your existing authenticated sessions.
 
@@ -11,14 +11,14 @@
 ## Installation
 
 ```bash
-npm install -g aipr
+npm install -g pull-request-review
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/hardik-143/aipr
-cd aipr
+git clone https://github.com/hardik-143/pull-request-review
+cd pr-review
 npm install
 npm install -g .
 ```
@@ -38,7 +38,7 @@ npm install -g .
 ```bash
 # Run inside any git repository
 cd your-project
-aipr
+pr-review
 ```
 
 You'll be prompted to pick an AI provider, a model, and your branches. That's it.
@@ -86,7 +86,7 @@ gemini  # sign in on first launch
 ### Interactive review
 
 ```bash
-aipr
+pr-review
 ```
 
 Flow:
@@ -129,55 +129,55 @@ Flow:
 ### Commands & flags
 
 ```
-aipr                              Interactive PR review
-aipr review                       Explicit review subcommand (same as above)
-aipr config                       View and edit global config
-aipr review --staged              Review staged (uncommitted) changes
-aipr review --provider=<provider> Skip provider prompt
-aipr review --model=<model>       Skip model prompt
-aipr review --base=<branch>       Override destination/base branch
-aipr review --focus=<area>        Focus: security, performance, etc.
-aipr review --output=<file>       Override output file name
-aipr --help                       Show help
-aipr --version                    Show version
+pr-review                              Interactive PR review
+pr-review review                       Explicit review subcommand (same as above)
+pr-review config                       View and edit global config
+pr-review review --staged              Review staged (uncommitted) changes
+pr-review review --provider=<provider> Skip provider prompt
+pr-review review --model=<model>       Skip model prompt
+pr-review review --base=<branch>       Override destination/base branch
+pr-review review --focus=<area>        Focus: security, performance, etc.
+pr-review review --output=<file>       Override output file name
+pr-review --help                       Show help
+pr-review --version                    Show version
 ```
 
 ### Examples
 
 ```bash
 # Standard interactive review
-aipr
+pr-review
 
 # Explicit review subcommand
-aipr review
+pr-review review
 
 # Non-interactive — skip all prompts
-aipr review --provider=claude --model=claude-sonnet-4-5 --base=main
+pr-review review --provider=claude --model=claude-sonnet-4-5 --base=main
 
 # Security-focused review of staged changes
-aipr review --staged --focus=security
+pr-review review --staged --focus=security
 
 # Use Gemini's most capable model
-aipr review --provider=gemini --model=pro
+pr-review review --provider=gemini --model=pro
 
 # Review with GitHub Copilot, custom output file
-aipr review --provider=copilot --output=review-$(date +%Y%m%d).md
+pr-review review --provider=copilot --output=review-$(date +%Y%m%d).md
 
 # View and update config
-aipr config
+pr-review config
 ```
 
 ---
 
 ## PR Number Detection
 
-If a GitHub PR is open for the current branch, `aipr` automatically detects it via `gh pr view` and names the output file:
+If a GitHub PR is open for the current branch, `pr-review` automatically detects it via `gh pr view` and names the output file:
 
 ```
 pr-42-review.md
 ```
 
-Falls back to `aipr-review.md` (from config) if no PR is found or `gh` is not installed.
+Falls back to `pr-review-review.md` (from config) if no PR is found or `gh` is not installed.
 
 ---
 
@@ -231,7 +231,7 @@ Falls back to `aipr-review.md` (from config) if no PR is found or `gh` is not in
 
 ## Global Config
 
-Auto-created at `~/.aipr/config.json` on first run.
+Auto-created at `~/.pr-review/config.json` on first run.
 
 **Default config:**
 
@@ -248,7 +248,7 @@ Auto-created at `~/.aipr/config.json` on first run.
   "defaultBaseBranch": "main",
   "maxDiffLength": 100000,
   "ignoreFiles": ["package-lock.json", "yarn.lock"],
-  "outputFile": "aipr-review.md",
+  "outputFile": "pr-review-review.md",
   "strictMode": true
 }
 ```
@@ -258,13 +258,13 @@ The last-used provider and model per provider are automatically remembered.
 **Edit interactively:**
 
 ```bash
-aipr config
+pr-review config
 ```
 
 **Or edit directly:**
 
 ```bash
-nano ~/.aipr/config.json
+nano ~/.pr-review/config.json
 ```
 
 ### Config options
@@ -276,7 +276,7 @@ nano ~/.aipr/config.json
 | `defaultBaseBranch` | Branch to diff against | `main` |
 | `maxDiffLength` | Max diff characters sent to AI | `100000` |
 | `ignoreFiles` | Files excluded from diff | `[package-lock.json, yarn.lock]` |
-| `outputFile` | Fallback report filename | `aipr-review.md` |
+| `outputFile` | Fallback report filename | `pr-review-review.md` |
 | `strictMode` | Strict review mode in prompt | `true` |
 
 ---
@@ -287,7 +287,7 @@ Every generated report has this structure:
 
 ```markdown
 ---
-<!-- Generated by aipr on 2026-04-03T18:00:00.000Z -->
+<!-- Generated by pr-review on 2026-04-03T18:00:00.000Z -->
 <!-- Provider: Claude | Model: claude-sonnet-4-5 | Diff: 4821 chars | feature/auth → main -->
 <!-- PR: #42 -->
 ---
@@ -309,11 +309,11 @@ Every generated report has this structure:
 ## Project structure
 
 ```
-aipr/
+pr-review/
 ├── src/
 │   ├── cli.js              Main entry point, argument parsing, user prompts
 │   ├── ai.js               Provider dispatcher
-│   ├── config.js           Config manager (~/.aipr/config.json)
+│   ├── config.js           Config manager (~/.pr-review/config.json)
 │   ├── git.js              Git diff + PR number detection
 │   ├── prompt.js           PR review prompt builder + system prompt
 │   ├── file.js             Report file writer

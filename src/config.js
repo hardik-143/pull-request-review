@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import readline from 'readline';
 
-export const CONFIG_DIR = path.join(os.homedir(), '.aipr');
+export const CONFIG_DIR = path.join(os.homedir(), '.pr-review');
 export const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 
 export const DEFAULT_CONFIG = {
@@ -18,7 +18,7 @@ export const DEFAULT_CONFIG = {
   defaultBaseBranch: 'main',
   maxDiffLength: 100000,
   ignoreFiles: ['package-lock.json', 'yarn.lock'],
-  outputFile: 'aipr-review.md',
+  outputFile: 'pr-review-review.md',
   strictMode: true,
 };
 

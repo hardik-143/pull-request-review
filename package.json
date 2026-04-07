@@ -1,22 +1,22 @@
 {
-  "name": "aipr",
+  "name": "pull-request-review",
   "version": "1.0.0",
   "description": "AI-powered Pull Request reviews using Claude",
   "type": "module",
   "author": "Hardik <dhardik1430@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hardik-143/aipr.git"
+    "url": "https://github.com/hardik-143/pull-request-review.git"
   },
-  "homepage": "https://github.com/hardik-143/aipr#readme",
+  "homepage": "https://github.com/hardik-143/pull-request-review#readme",
   "bugs": {
-    "url": "https://github.com/hardik-143/aipr/issues"
+    "url": "https://github.com/hardik-143/pull-request-review/issues"
   },
   "files": [
     "src"
   ],
   "bin": {
-    "aipr": "./src/cli.js"
+    "pr-review": "./src/cli.js"
   },
   "scripts": {
     "start": "node src/cli.js"
