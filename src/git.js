@@ -30,25 +30,58 @@ export function getCurrentBranch() {
   }
 }
 
-export function branchExists(branch) {
+/**
+ * Fetch all remotes so remote-only branches are visible locally.
+ * Failures are silently ignored (e.g. offline, no remote configured).
+ */
+export function fetchAll() {
   try {
-    execSync(`git rev-parse --verify "${branch}"`, { encoding: 'utf8', stdio: 'pipe' });
-    return true;
+    execSync('git fetch --all --quiet', { encoding: 'utf8', stdio: 'pipe' });
   } catch {
-    return false;
+    // Non-fatal — work with whatever refs are already available
   }
 }
 
-export function getDiff(sourceBranch, destBranch, ignoreFiles = []) {
-  if (!branchExists(sourceBranch)) {
-    throw new Error(`Branch not found: "${sourceBranch}"`);
+/**
+ * Resolve a branch name to a usable git ref.
+ * Priority: local branch → origin/<branch> → any remote/<branch>
+ * Returns the resolved ref string, or null if not found anywhere.
+ */
+export function resolveRef(branch) {
+  const candidates = [
+    branch,
+    `origin/${branch}`,
+    `refs/remotes/origin/${branch}`,
+  ];
+
+  for (const ref of candidates) {
+    try {
+      execSync(`git rev-parse --verify "${ref}"`, { encoding: 'utf8', stdio: 'pipe' });
+      return ref;
+    } catch {
+      // try next candidate
+    }
   }
-  if (!branchExists(destBranch)) {
-    throw new Error(`Branch not found: "${destBranch}"`);
+
+  return null;
+}
+
+export function getDiff(sourceBranch, destBranch, ignoreFiles = []) {
+  // Always fetch first so remote-only branches are available
+  fetchAll();
+
+  const sourceRef = resolveRef(sourceBranch);
+  if (!sourceRef) {
+    throw new Error(`Branch not found: "${sourceBranch}" (checked local and origin)`);
+  }
+
+  const destRef = resolveRef(destBranch);
+  if (!destRef) {
+    throw new Error(`Branch not found: "${destBranch}" (checked local and origin)`);
   }
 
   try {
-    let cmd = `git diff "${destBranch}...${sourceBranch}"`;
+    let cmd = `git diff "${destRef}...${sourceRef}"`;
 
     if (ignoreFiles.length > 0) {
       const exclusions = ignoreFiles.map((f) => `':(exclude)${f}'`).join(' ');
@@ -81,3 +114,4 @@ export function getStagedDiff(ignoreFiles = []) {
     throw new Error(`git diff --staged failed: ${err.message}`);
   }
 }
+

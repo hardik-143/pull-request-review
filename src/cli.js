@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 
 import { loadConfig, saveConfig, showAndEditConfig } from './config.js';
-import { isGitRepo, getCurrentBranch, getDiff, getStagedDiff, getPRNumber } from './git.js';
+import { isGitRepo, getCurrentBranch, getDiff, getStagedDiff, getPRNumber, fetchAll } from './git.js';
 import { buildReviewPrompt } from './prompt.js';
 import { callAI } from './ai.js';
 import { saveReport, addMetadata } from './file.js';
@@ -118,6 +118,14 @@ async function main() {
   }
 
   console.log('');
+
+  // ── Fetch remotes ──────────────────────────────────────────────────────────
+
+  if (!flags.staged) {
+    const spinnerFetch = ora({ text: 'Fetching remotes (git fetch --all)…', color: 'cyan' }).start();
+    fetchAll();
+    spinnerFetch.succeed(chalk.green('Remotes fetched'));
+  }
 
   // ── Fetch diff ─────────────────────────────────────────────────────────────
 
@@ -323,11 +331,11 @@ ${chalk.bold('USAGE')}
   ${chalk.cyan('pr-review --version')}                       Show version
 
 ${chalk.bold('PROVIDERS')}
-  ${chalk.cyan('claude')}    claude CLI  — claude-sonnet-4-6, claude-opus-4-6, claude-haiku-4-5
-  ${chalk.cyan('copilot')}   copilot CLI — claude-sonnet-4.6, gpt-5.4, claude-opus-4.6, gpt-5.4-mini
-  ${chalk.cyan('codex')}     codex CLI   — gpt-5.4, o3, o4-mini, gpt-4.1
-  ${chalk.cyan('gemini')}    gemini CLI  — flash, pro, flash-lite
-  ${chalk.cyan('cursor')}    agent CLI   — install Cursor + add \`agent\` to PATH
+  ${chalk.cyan('claude')}    claude CLI  — sonnet-4-6, opus-4-6, haiku-4-5, opus-4-5, sonnet-4
+  ${chalk.cyan('copilot')}   copilot CLI — claude-sonnet-4.6, claude-opus-4.6, gpt-5.4, gpt-5.3-codex, gpt-5.2-codex …
+  ${chalk.cyan('codex')}     codex CLI   — gpt-5.4, gpt-5.4-mini, gpt-5.3-codex, gpt-5.2
+  ${chalk.cyan('gemini')}    gemini CLI  — Auto (Gemini 3), Auto (Gemini 2.5), gemini-3.1-pro, gemini-2.5-flash …
+  ${chalk.cyan('cursor')}    agent CLI   — Auto, Codex 5.3, Codex 5.3 High, Codex 5.3 Spark, Composer 2 …
 
 ${chalk.bold('PR NUMBER')}
   If a GitHub PR is open for the current branch (\`gh pr view\`),
